@@ -1,8 +1,15 @@
 <?php
 $title = 'Home';
-include('./inc/header.php');
-include('connection.php');
+include_once('./inc/header.php');
+include_once('connection.php');
+include('auth.php');
+
 ?>
+
+<div>
+    <p>Welcome <?= $_SESSION['user']['username']; ?> </p>
+</div>
+
 <a href="authors.php">Authors</a>
 <a href="addBook.php">Add book</a>
 
@@ -44,8 +51,8 @@ foreach ($result as $row) {
 echo '</table>';
 
 
-
 ?>
+<br><a href="logout.php">Logout</a>
 
 <?php
 include('./inc/footer.php');

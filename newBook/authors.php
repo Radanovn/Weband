@@ -2,6 +2,7 @@
 include('connection.php');
 $title = 'Authors';
 include('./inc/header.php');
+session_start();
 ?>
 <a href="index.php">Home</a>
 <form action="authors.php" method='POST'>
