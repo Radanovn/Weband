@@ -35,9 +35,8 @@ while ($row = mysqli_fetch_assoc($q)) {
 }
 
 echo '<table border="1"><tr><td>Book</td><td>Authors</td></tr>';
-foreach ($result as $row) {
-
-    echo '<tr><td>' . $row['book_title'] . '</td>
+foreach ($result as $book_id => $row) {
+    echo '<tr><td><a href="showBook.php?book_id=' . $book_id . '">' .  $row['book_title'] . '</a></td>
     <td>';
 
     $ar = [];

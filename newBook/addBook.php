@@ -2,6 +2,7 @@
 include('connection.php');
 $title = 'Ad Book';
 include('./inc/header.php');
+session_start();
 ?>
 <a href="index.php">Home</a>
 <form action="addBook.php" method='POST'>
