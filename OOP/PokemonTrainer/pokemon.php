@@ -2,36 +2,53 @@
 
 class Trainer
 {
-    private $name;
-    protected $number;
-    protected $badges;
-    protected $pokemons;
-    private function __construct(string $name, int $number, $badges = 0, Pokemon $pokemons)
+    public $name;
+    public $number;
+    public $badges;
+    public $pokemons = [];
+    public function __construct(string $name, int $badges = 0)
     {
         $this->name = $name;
-        $this->number = $number;
         $this->badges = $badges;
-        $this->pokemons = $pokemons;
     }
 
-    protected function getName(): string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    protected function getNumbers(): int
+    public function getNumbers(): int
     {
         return $this->number;
     }
 
-    protected function getBadges(): int
+    public function getPokemons(): array
+    {
+        return $this->pokemons;
+    }
+
+    public function getBadges(): int
     {
         return $this->badges;
     }
 
-    protected function badges(): int
+    public function Badges(): int
     {
         return $this->badges++;
+    }
+
+    public function Pokemons(Pokemon $pokemon)
+    {
+        $this->pokemons[] = $pokemon;
+    }
+
+    public function countOfPokemons() {
+        return count($this->pokemons);
+    }
+
+    public function pokemonCollection($collection) 
+    {
+        $this->pokemons = $collection;
     }
 
 }
@@ -40,59 +57,127 @@ class Trainer
 class Pokemon
 {
 
-    private $name;
-    protected $element;
-    protected $health;
+    public $name;
+    public $element;
+    public $health;
 
-    private function __construct($name, $element, $health)
+    public function __construct($name, $element, $health)
     {
         $this->name = $name;
         $this->element = $element;
         $this->health = $health;
     }
 
-    protected function getName(): string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    protected function getElement(): string
+    public function getElement(): string
     {
         return $this->element;
     }
 
-    protected function gethealth(): string
+    public function gethealth(): string
     {
         return $this->health;
     }
 
-    protected function minusHealth(): int
+    public function minusHealth(): int
     {
         return $this->health -= 10;
     }
 }
 
 $input = [
-'Pesho Charizard Fire 100',
-'Gosho Squirtle Water 38',
-'Pesho Pikachu Electricity 10',
-'Tournament',
-'Fire',
-'Electricity',
-'End',
+    'Pesho Charizard Fire 100',
+    'Gosho Squirtle Water 38',
+    'Pesho Pikachu Electricity 10',
+    'Tournament',
+    'Fire',
+    'Electricity',
+    'End',
 ];
-for ($i=0; $i < count($input); $i++) { 
-    $pokemon = array_shift($input);
-    $pokemon = explode(' ', $pokemon);
-if($pokemon[0] == "Tournament") {
-    while($pokemon === 'End') {
-        
+
+// $input = [
+//     'Stamat Blastoise Water 18',
+// 'Nasko Pikachu Electricity 22',
+// 'Jicata Kadabra Psychic 90',
+// 'Tournament',
+// 'Fire',
+// 'Electricity',
+// 'Fire',
+// 'End',
+// ];
+
+$trainersAndPokemons = [];
+$namesOfTrainers = [];
+
+
+
+for ($i = 0; $i < count($input); $i++) {
+    if($input[0] === "Tournament") {
+    break;
+   }
+
+   
+    $input2 = array_shift($input);
+    $input2 = explode(' ', $input2);
+
+
+    $trainerName = $input2[0];
+    $pokemonName = $input2[1];
+    $pokemonElement = $input2[2];
+    $pokemonHealth = intval($input2[3]);
+
+    if(!in_array($trainerName, $namesOfTrainers)) {
+        $pokemon = new Pokemon($pokemonName, $pokemonElement, $pokemonHealth);
+        $trainer = new Trainer($trainerName);
+        $trainer->Pokemons($pokemon);
+        $trainersAndPokemons[] = $trainer;
+        $namesOfTrainers[] = $trainerName;
+    } else {
+        $pokemon = new Pokemon($pokemonName, $pokemonElement, $pokemonHealth);
+        foreach ($trainersAndPokemons as $trainerAndPokemon ) {
+          if($trainerAndPokemon->getName() == $trainerName) {
+              $trainerAndPokemon->Pokemons($pokemon);
+          }
+        }
     }
 }
 
+for ($i=0; $i < count($input); $i++) { 
+    if($input[$i] === "End") {
+     break;
+    }
+   
+
+    foreach ($trainersAndPokemons as $trainerAndPokemon) {
+        $pokemonsByTrainer = $trainerAndPokemon->getPokemons();
+        
+        foreach ($pokemonsByTrainer as $key => $pokemon) {
+            
+           if($pokemon->getElement() == $input[$i]) {
+        
+            
+               $trainerAndPokemon->Badges();
+           break;
+           
+           } else {
+               $pokemon->minusHealth();
+           }
+        }
+        
+        $trainerAndPokemon->pokemonCollection($pokemonsByTrainer);
+    }
 }
 
 
 
-print_r($pokemon);
-print_r($input);
+foreach ($trainersAndPokemons as $trainerAndPokemon) {
+
+   echo $trainerAndPokemon->getName() . ' ' . $trainerAndPokemon->getBadges() 
+   . ' ' . $trainerAndPokemon->countOfPokemons() . ' <br> ' ;
+}
+
+
